@@ -182,6 +182,7 @@ let addSign = (x, y, text) => {
 	let push = 0
 	if (josh.state === 'action') {
 		if ((josh.pos.x === x && josh.pos.y + 16 === y && josh.direction === 'up') ||
+			(josh.pos.x === x && josh.pos.y - 16 === y && josh.direction === 'down') ||
 			(josh.pos.x - 16 === x && josh.pos.y === y && josh.direction === 'left') ||
 			(josh.pos.x + 16 === x && josh.pos.y === y && josh.direction === 'right')){
 			push = 1;
