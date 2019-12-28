@@ -240,6 +240,7 @@ let loadRoom = () => {
 		addColision(96, 96);
 		addColision(112, 96);
 		addColision(144, 96);
+		addColision(160, 96);
 		addSign(160, 96)
 		if (josh.pos.y > 84 && josh.pos.y < 100 && josh.pos.x === 128) {
 			room = 'house';
