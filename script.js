@@ -173,14 +173,14 @@ let addDoordown = (x, y) => {
 let addDoorup = (x, y) => {
 	let counter = System.div(System.countTics(), 12);
 	doorFrame = System.mod(counter, 2);
-	System.drawSprite('door_indicator_up_' + doorFrame, x, 0);
+	System.drawSprite('door_indicator_up_' + doorFrame, x, y);
 }
 
 let addSign = (x, y, text) => {
 	let push = 0
 	if (josh.state === 'action' && 
 		((josh.pos.x === x && josh.pos.y + 16 === y && josh.direction === 'up') ||
-		(josh.pos.x === x + 16 && josh.pos.y === y && josh.direction === 'right'))
+		(josh.pos.x === x + 16 && josh.pos.y === y && josh.direction === 'right')
 		) {
 		push ++;
 		if (push === 1) {
