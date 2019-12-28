@@ -173,7 +173,7 @@ let addDoordown = (x, y) => {
 let addDoorup = (x, y) => {
 	let counter = System.div(System.countTics(), 12);
 	doorFrame = System.mod(counter, 2);
-	System.drawSprite('door_indicator_up_' + doorFrame, x, y);
+	System.drawSprite('door_indicator_up_' + doorFrame, x, 0);
 }
 
 let addSign = (x, y, text) => {
