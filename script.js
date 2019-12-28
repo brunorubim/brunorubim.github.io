@@ -312,7 +312,6 @@ System.setTic(() => {
 	System.render();
 	loadRoom();
 	// console.log(System.countTics(),doorFrame);
-	console.log(josh.pos.x);
 });
 
 System.ready(() => {
