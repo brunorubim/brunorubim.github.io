@@ -179,8 +179,8 @@ let addDoorup = (x, y) => {
 let addSign = (x, y, text) => {
 	let push = 0
 	if (josh.state === 'action' && 
-		(josh.pos.x === x && josh.pos.y + 16 === y && josh.direction === 'up') ||
-		(josh.pos.x === x + 16 && josh.pos.y === y && josh.direction === 'right')
+		((josh.pos.x === x && josh.pos.y + 16 === y && josh.direction === 'up') ||
+		(josh.pos.x === x + 16 && josh.pos.y === y && josh.direction === 'right'))
 		) {
 		push ++;
 		if (push === 1) {
