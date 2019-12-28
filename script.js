@@ -177,8 +177,15 @@ let addDoorup = (x, y) => {
 }
 
 let addSign = (x, y, text) => {
+	let push = 0
 	if (josh.pos.x === x && josh.pos.y + 16 === y && josh.state === 'action' && josh.direction === 'up') {
-		System.drawSprite('text_' + text, 0, 0);
+		push ++;
+		if (push === 1) {
+			System.drawSprite('text_' + text, 0, 0);
+		}
+		if (push > 1) {
+			push = 0;
+		}
 	}
 	System.drawSprite('sign', x, y + 4);
 }
