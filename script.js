@@ -177,20 +177,19 @@ let addDoorup = (x, y) => {
 }
 
 let addSign = (x, y, text) => {
+	System.drawSprite('sign', x, y + 4);
+	console.log(josh.pos);	
 	let push = 0
-	if (josh.state === 'action' && 
-		((josh.pos.x === x && josh.pos.y + 16 === y && josh.direction === 'up') ||
-		(josh.pos.x === x + 16 && josh.pos.y === y && josh.direction === 'right')
-		) {
-		push ++;
-		if (push === 1) {
-			System.drawSprite('text_' + text, 0, 0);
-		}
-		if (push > 1) {
-			push = 0;
+	if (josh.state === 'action') {
+		if ((josh.pos.x === x && josh.pos.y + 16 === y && josh.direction === 'up') ||
+			(josh.pos.x - 16 === x && josh.pos.y === y && josh.direction === 'left') ||
+			(josh.pos.x + 16 === x && josh.pos.y === y && josh.direction === 'right')){
+			push = 1;
+			if (push === 1) {
+				System.drawSprite('text_' + text, 0, 0);
+			}
 		}
 	}
-	System.drawSprite('sign', x, y + 4);
 }
 
 let room = 'house';
@@ -253,8 +252,8 @@ let loadRoom = () => {
 		addColision(96, 96);
 		addColision(112, 96);
 		addColision(144, 96);
-		addColision(160, 96);
-		addSign(160, 96, 'test')
+		addColision(176, 96);
+		addSign(176, 96, 'test')
 		if (josh.pos.y > 84 && josh.pos.y < 100 && josh.pos.x === 128) {
 			room = 'house';
 		}
