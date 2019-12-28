@@ -185,7 +185,7 @@ let addSign = (x, y, text) => {
 				console.log(3);
 				if (josh.direction === up) {
 					console.log (ok);
-					System.drawSprite('text_' + text, x - 8 y + 16);
+					System.drawSprite('text_' + text, x - 8, y + 16);
 				}
 			}
 		}
