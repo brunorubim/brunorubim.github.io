@@ -178,7 +178,7 @@ let addDoorup = (x, y) => {
 
 let addSign = (x, y, text) => {
 	if (josh.pos.x === x && josh.pos.y + 16 === y && josh.state === action && josh.direction === up) {
-		System.()
+		System.drawSprite('text_' + text, x - 8 y + 16)
 	}
 	System.drawSprite('sign', x, y + 4);
 }
