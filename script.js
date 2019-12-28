@@ -10,10 +10,14 @@ System.loadSprite('room_house','room_house.png');
 System.loadSprite('room_house_over','empty_16x16.png');
 System.loadSprite('room_outside_1','room_outside_1.png');
 System.loadSprite('room_outside_1_over','room_outside_1_over.png');
+
 System.loadSprite('door_indicator_up_0','door_indicator_up_0.png');
 System.loadSprite('door_indicator_up_1','empty_16x16.png');
 System.loadSprite('door_indicator_down_0','door_indicator_down_0.png');
 System.loadSprite('door_indicator_down_1','empty_16x16.png');
+
+System.loadSprite('sign', 'sign.png');
+
 for (let i=1; i<=4; i++) {
 	System.loadSprite('josh_walking_down_'+i,'josh_walking_down_'+i+'.png');
  	System.loadSprite('josh_walking_left_'+i,'josh_walking_left_'+i+'.png');
@@ -171,6 +175,11 @@ let addDoorup = (x, y) => {
 	System.drawSprite('door_indicator_up_' + doorFrame, x, y);
 }
 
+let addSign = (x, y, text) => {
+	// if () {}
+	System.drawSprite('sign', x, y);
+}
+
 let room = 'house';
 
 let drawRoom = () => {
@@ -231,6 +240,7 @@ let loadRoom = () => {
 		addColision(96, 96);
 		addColision(112, 96);
 		addColision(144, 96);
+		addSign(160, 96)
 		if (josh.pos.y > 84 && josh.pos.y < 100 && josh.pos.x === 128) {
 			room = 'house';
 		}
