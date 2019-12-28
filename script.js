@@ -177,7 +177,7 @@ let addDoorup = (x, y) => {
 
 let addSign = (x, y, text) => {
 	// if () {}
-	System.drawSprite('sign', x, y);
+	System.drawSprite('sign', x, y + 4);
 }
 
 let room = 'house';
