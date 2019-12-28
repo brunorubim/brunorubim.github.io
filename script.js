@@ -17,6 +17,7 @@ System.loadSprite('door_indicator_down_0','door_indicator_down_0.png');
 System.loadSprite('door_indicator_down_1','empty_16x16.png');
 
 System.loadSprite('sign', 'sign.png');
+System.loadSprite('text_test', 'text_test.png');
 
 for (let i=1; i<=4; i++) {
 	System.loadSprite('josh_walking_down_'+i,'josh_walking_down_'+i+'.png');
@@ -176,7 +177,9 @@ let addDoorup = (x, y) => {
 }
 
 let addSign = (x, y, text) => {
-	// if () {}
+	if (josh.pos.x === x && josh.pos.y + 16 === y && josh.state === action && josh.direction === up) {
+		System.()
+	}
 	System.drawSprite('sign', x, y + 4);
 }
 
