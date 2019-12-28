@@ -181,11 +181,11 @@ let addSign = (x, y, text) => {
 		console.log(1);
 		if (josh.pos.y + 16 === y){
 			console.log(2);
-			if (josh.state === action) {
+			if (josh.state === 'action') {
 				console.log(3);
-				if (josh.direction === up) {
-					console.log (ok);
-					System.drawSprite('text_' + text, x - 8, y + 16);
+				if (josh.direction === 'up') {
+					console.log ('ok');
+					System.drawSprite('text_' + text, x - 8, y + 20);
 				}
 			}
 		}
@@ -254,7 +254,7 @@ let loadRoom = () => {
 		addColision(112, 96);
 		addColision(144, 96);
 		addColision(160, 96);
-		addSign(160, 96)
+		addSign(160, 96, 'test')
 		if (josh.pos.y > 84 && josh.pos.y < 100 && josh.pos.x === 128) {
 			room = 'house';
 		}
