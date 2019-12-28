@@ -281,6 +281,7 @@ let readKeys = () => {
 		josh.speed.set(0);
 		josh.state = 'static';
  		if (System.key('e') || System.key('c')) {
+ 			josh.frame = 1
 			josh.state = 'action';
 		}
 		if (System.key('d') || System.key('right')) {
