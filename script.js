@@ -6,10 +6,10 @@ System.set({
 });
 
 System.loadSprite('room_test','room_test.png');
-System.loadSprite('room_house','room_house.png');
-System.loadSprite('room_house_over','empty_16x16.png');
-System.loadSprite('room_outside_1','room_outside_1.png');
-System.loadSprite('room_outside_1_over','room_outside_1_over.png');
+System.loadSprite('room_house_1_1','room_house_0.png');
+System.loadSprite('room_house_1_1_over','empty_16x16.png');
+System.loadSprite('room_outside_1_1','room_outside_1.png');
+System.loadSprite('room_outside_1_1_over','room_outside_1_over.png');
 
 System.loadSprite('door_indicator_up_0','door_indicator_up_0.png');
 System.loadSprite('door_indicator_up_1','empty_16x16.png');
@@ -41,22 +41,23 @@ System.loadSprite('josh_static_left_1','josh_static_left_1.png');
 System.loadSprite('josh_static_left_2','josh_static_left_1.png');
 System.loadSprite('josh_static_left_3','josh_static_left_2.png');
 System.loadSprite('josh_static_left_4','josh_static_left_2.png');
-System.loadSprite('josh_action_down_1','josh_action_down_1.png');
-System.loadSprite('josh_action_down_2','josh_action_down_1.png');
-System.loadSprite('josh_action_down_3','josh_action_down_2.png');
-System.loadSprite('josh_action_down_4','josh_action_down_2.png');
-System.loadSprite('josh_action_left_1','josh_action_left_1.png');
-System.loadSprite('josh_action_left_2','josh_action_left_1.png');
-System.loadSprite('josh_action_left_3','josh_action_left_2.png');
-System.loadSprite('josh_action_left_4','josh_action_left_2.png');
-System.loadSprite('josh_action_right_1','josh_action_right_1.png');
-System.loadSprite('josh_action_right_2','josh_action_right_1.png');
-System.loadSprite('josh_action_right_3','josh_action_right_2.png');
-System.loadSprite('josh_action_right_4','josh_action_right_2.png');
-System.loadSprite('josh_action_up_1','josh_action_up_1.png');
-System.loadSprite('josh_action_up_2','josh_action_up_1.png');
-System.loadSprite('josh_action_up_3','josh_action_up_2.png');
-System.loadSprite('josh_action_up_4','josh_action_up_2.png');
+System.loadSprite('josh_action_down_1','josh_action_down_2.png');
+System.loadSprite('josh_action_down_2','josh_action_down_2.png');
+System.loadSprite('josh_action_down_3','josh_action_down_1.png');
+System.loadSprite('josh_action_down_4','josh_action_down_1.png');
+System.loadSprite('josh_action_left_1','josh_action_left_2.png');
+System.loadSprite('josh_action_left_2','josh_action_left_2.png');
+System.loadSprite('josh_action_left_3','josh_action_left_1.png');
+System.loadSprite('josh_action_left_4','josh_action_left_1.png');
+System.loadSprite('josh_action_right_1','josh_action_right_2.png');
+System.loadSprite('josh_action_right_2','josh_action_right_2.png');
+System.loadSprite('josh_action_right_3','josh_action_right_1.png');
+System.loadSprite('josh_action_right_4','josh_action_right_1.png');
+System.loadSprite('josh_action_up_1','josh_action_up_2.png');
+System.loadSprite('josh_action_up_2','josh_action_up_2.png');
+System.loadSprite('josh_action_up_3','josh_action_up_1.png');
+System.loadSprite('josh_action_up_4','josh_action_up_1.png');
+System.loadSprite('josh_shadow_grass','josh_shadow_grass.png');
 
 let josh = {
 	sprite: 'josh_static_down_1',
@@ -162,45 +163,48 @@ let drawJosh = () => {
 	System.drawSprite(josh.sprite, josh.pos.x, josh.pos.y + 4);	
 }
 
-let doorFrame = 0;
 
 let addDoordown = (x, y) => {
+	let doorFrame = 0;
 	let counter = System.div(System.countTics(), 12);
 	doorFrame = System.mod(counter, 2);
 	System.drawSprite('door_indicator_down_' + doorFrame, x, y);
-}
+}	
 
 let addDoorup = (x, y) => {
+	let doorFrame = 0;
 	let counter = System.div(System.countTics(), 12);
 	doorFrame = System.mod(counter, 2);
 	System.drawSprite('door_indicator_up_' + doorFrame, x, y);
 }
 
 let addSign = (x, y, text) => {
-	System.drawSprite('sign', x, y + 4);
-	console.log(josh.pos);	
+	// System.drawSprite('sign', x, y + 4);
 	let push = 0
-	if (josh.state === 'action') {
-		if ((josh.pos.x === x && josh.pos.y + 16 === y && josh.direction === 'up') ||
-			(josh.pos.x === x && josh.pos.y - 16 === y && josh.direction === 'down') ||
-			(josh.pos.x - 16 === x && josh.pos.y === y && josh.direction === 'left') ||
-			(josh.pos.x + 16 === x && josh.pos.y === y && josh.direction === 'right')){
-			push = 1;
-			if (push === 1) {
-				System.drawSprite('text_' + text, 0, 0);
-			}
+	if (josh.pos.x === x && josh.state === 'action') {
+		if ((josh.pos.y + 16 === y && josh.direction === 'up') ||
+		(josh.pos.x === x && josh.pos.y - 16 === y && josh.direction === 'down') ||
+		(josh.pos.x - 16 === x && josh.pos.y === y && josh.direction === 'left') ||
+		(josh.pos.x + 16 === x && josh.pos.y === y && josh.direction === 'right')){
+			System.drawSprite('text_' + text, 0, 0);
 		}
 	}
 }
+let roomName = 'house';
+let roomNumberX = 1;
+let roomNumberY = 1;
+let room = roomName + '_' + roomNumberX + '_' + roomNumberY;
 
-let room = 'house';
+let IdunnoDeName = () => {
+	room = roomName + '_' + roomNumberX + '_' + roomNumberY;
+}
 
 let drawRoom = () => {
 	System.drawSprite('room_' + room, 0, 0);
-	if (room === 'house'){
+	if (room === 'house_1_1'){
 		addDoordown(128, 96);
 	}
-	if (room === 'outside_1'){
+	if (room === 'outside_1_1'){
 		addDoorup(128, 80);
 	}
 };
@@ -210,11 +214,27 @@ let drawRoomOver = () => {
 };
 
 let loadRoom = () => {
+	if (josh.pos.x > 240){
+		josh.pos.x = 0;
+		roomNumberX += 1;
+	}
+	if (josh.pos.x < 0){
+		josh.pos.x = 240;
+		roomNumberX -= 1;
+	}
+	if (josh.pos.y > 240){
+		josh.pos.y = 0;
+		roomNumberY += 1;
+	}
+	if (josh.pos.y < 0){
+		josh.pos.y = 240;
+		roomNumberY -= 1;
+	}
 	colisionMap = {};
 	if (room === 'test') {
 		addColision(160, 100)
 	}
-	if (room === 'house') {
+	if (roomName === 'house') {
 		addColision(80, 144);
 		addColision(96, 144);
 		addColision(112, 144);
@@ -238,10 +258,10 @@ let loadRoom = () => {
 		addColision(144, 80);
 		addColision(160, 80);
 		if (josh.pos.y < 90) {
-			room = 'outside_1';
+			roomName = 'outside';
 		}
 	}
-	if (room === 'outside_1') {
+	if (room === 'outside_1_1') {
 		addColision(96, 128);
 		addColision(112, 128);
 		addColision(128, 128);
@@ -271,7 +291,7 @@ let loadRoom = () => {
 		addColision(192, 16);
 		addColision(208, 16);
 		if (josh.pos.y > 84 && josh.pos.y < 100 && josh.pos.x === 128) {
-			room = 'house';
+			roomName = 'house';
 		}
 	}
 };
@@ -281,7 +301,6 @@ let readKeys = () => {
 		josh.speed.set(0);
 		josh.state = 'static';
  		if (System.key('e') || System.key('c')) {
- 			josh.frame = 1
 			josh.state = 'action';
 		}
 		if (System.key('d') || System.key('right')) {
@@ -320,7 +339,7 @@ System.setRender(() => {
 	drawRoom();
 	drawJosh();
 	drawRoomOver();
-	// colisionOutline();
+	colisionOutline();
 });
 
 // Defines what happens every tic
@@ -328,8 +347,9 @@ System.setTic(() => {
 	// Runs every tic
 	readKeys();
 	updatePos();
-	System.render();
 	loadRoom();
+	IdunnoDeName();
+	System.render();
 	// console.log(System.countTics(),doorFrame);
 });
 
