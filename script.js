@@ -196,7 +196,6 @@ let roomNumberY = 1;
 let room = roomName + '_' + roomNumberX + '_' + roomNumberY;
 
 let IdunnoDeName = () => {
-	room = roomName + '_' + roomNumberX + '_' + roomNumberY;
 }
 
 let drawRoom = () => {
@@ -214,6 +213,7 @@ let drawRoomOver = () => {
 };
 
 let loadRoom = () => {
+	room = roomName + '_' + roomNumberX + '_' + roomNumberY;
 	if (josh.pos.x > 240){
 		josh.pos.x = 0;
 		roomNumberX += 1;
