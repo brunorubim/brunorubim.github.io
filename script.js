@@ -61,7 +61,7 @@ System.loadSprite('josh_shadow_grass','josh_shadow_grass.png');
 
 let josh = {
 	sprite: 'josh_static_down_1',
-	pos: System.vec2(128, 80),
+	pos: System.vec2(144, 112),
 	speed: System.vec2(0, 0),
 	direction: 'left',
 	state: 'static',
