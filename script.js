@@ -190,7 +190,7 @@ let addSign = (x, y, text) => {
 		}
 	}
 }
-let roomName = 'outside';
+let roomName = 'house';
 let roomNumberX = 1;
 let roomNumberY = 1;
 let room = roomName + '_' + roomNumberX + '_' + roomNumberY;
