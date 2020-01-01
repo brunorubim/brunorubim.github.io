@@ -190,6 +190,20 @@ let addSign = (x, y, text) => {
 		}
 	}
 }
+
+let addChatter = (x, y, text, n) => {
+	if (josh.pos.x === x && josh.state === 'action') {
+		if ((josh.pos.y + 16 === y && josh.direction === 'up') ||
+		(josh.pos.x === x && josh.pos.y - 16 === y && josh.direction === 'down') ||
+		(josh.pos.x - 16 === x && josh.pos.y === y && josh.direction === 'left') ||
+		(josh.pos.x + 16 === x && josh.pos.y === y && josh.direction === 'right')){
+			n = 1;
+			System.drawSprite('chat_' + text + '_' + n, 0, 0);
+		}
+	}
+
+}
+
 let roomName = 'house';
 let roomNumberX = 1;
 let roomNumberY = 1;
