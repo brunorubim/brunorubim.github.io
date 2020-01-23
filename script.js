@@ -187,11 +187,20 @@ let addSign = (x, y, text) => {
 		(josh.pos.x - 16 === x && josh.pos.y === y && josh.direction === 'left') ||
 		(josh.pos.x + 16 === x && josh.pos.y === y && josh.direction === 'right')){
 			System.drawSprite('text_' + text, 0, 0);
+			console.log('potato');
 		}
 	}
+	// console.log(josh.pos.x, x);
 }
 
-let addChatter = (x, y, text, n) => {
+let addChatter = (x, y, text, n, sprite) => {
+	let dir = 0
+	if (josh.pos.x > 128) {
+		dir = 1
+	} else {
+		dir = 0
+	}
+	System.drawSprite('sprite', x, y);
 	if (josh.pos.x === x && josh.state === 'action') {
 		if ((josh.pos.y + 16 === y && josh.direction === 'up') ||
 		(josh.pos.x === x && josh.pos.y - 16 === y && josh.direction === 'down') ||
@@ -219,6 +228,7 @@ let drawRoom = () => {
 	}
 	if (room === 'outside_1_1'){
 		addDoorup(128, 80);
+		addSign(176, 96, 'test');
 	}
 };
 
@@ -288,7 +298,6 @@ let loadRoom = () => {
 		addColision(112, 96);
 		addColision(144, 96);
 		addColision(176, 96);
-		addSign(176, 96, 'test')
 		addColision(176, 48);
 		addColision(192, 48);
 		addColision(208, 48);
@@ -353,6 +362,7 @@ System.setRender(() => {
 	drawRoom();
 	drawJosh();
 	drawRoomOver();
+	
 	// colisionOutline();
 });
 
