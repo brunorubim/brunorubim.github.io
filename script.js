@@ -158,7 +158,7 @@ let loadRoom = () => {
 		addBlock(6, 9, 'w');
 		addBlock(1, 1, 'wall_3');
 	}
-	if (room === 'test_1') {
+	if (room === 'test_0') {
 		addButton(3, 6);
 		addButton(4, 8);
 		addFan(9, 4, 3, buttons[0]);
