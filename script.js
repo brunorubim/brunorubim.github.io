@@ -183,6 +183,7 @@ let blocks = [];
 
 class Block {
 	constructor(x, y, type) {
+		this.known = true;
 		this.pos = System.vec2(x, y);
 		this.type = type;
 	}
@@ -203,7 +204,6 @@ let drawAllBlocks = () => {
 		let block = blocks[i];
 		drawBlock(block.pos.x, block.pos.y, block.type);
 	}
-	console.log(blocks);
 }
 
 
@@ -272,6 +272,7 @@ let wires = [];
 
 class Wire {
 	constructor(x, y, type, rptation) {
+		this.known = true;
 		this.type = type;
 		this.rotation = rotation;
 		this.pos = System.vec2(x, y);
@@ -291,11 +292,16 @@ let buttons = [];
 System.loadSprite('button_off', 'button_off.png');
 System.loadSprite('button_on', 'button_on.png');
 
+class Button {
+	constructor(x, y) {
+		this.known = true;
+		this.pressed = false;
+		this.pos = System.vec2(x, y);
+	}
+}
+
 let addButton = (x, y) => {
-	let button = {
-		pressed: false,
-		pos: System.vec2(x, y),
-	};
+	let button = new Button(x, y);
 	buttons.push(button);
 }
 
@@ -326,21 +332,40 @@ let checkButtons = () => {
 	}
 }
 
+//information
+
+System.loadSprite('information_1', 'information_1.png');
+System.loadSprite('information_0', 'information_0.png');
+
+let informations = []
+
+class Information {
+	constructor(x, y, subject) {
+		this.pos = System.vec2(x, y);
+		this.subject = subject
+	}
+	learn() {
+		
+	}
+}
+
 //fans
 
-System.loadSprite('fan_0', 'fan_0.png');
-System.loadSprite('fan_1', 'fan_1.png');
-System.loadSprite('fan_2', 'fan_1.png');
-System.loadSprite('fan_3', 'fan_1.png');
+System.loadSprite('fan_down_on_0', 'fan_on_0.png');
+System.loadSprite('fan_down_on_1', 'fan_on_1.png');
+System.loadSprite('fan_down_off_0', 'fan_ff_0.png');
+System.loadSprite('fan_down_off_1', 'fan_ff_1.png');
 
 let fans = []
 
 class Fan {
-	constructor(x, y, length, button){
-		this.on = false;
+	constructor(x, y, direction, length, button){
+		this.known = true;
+		this.power = 'off';
 		this.pos = System.vec2(x, y);
 		this.button = button;
 		this.rotation = 0;
+		this.direction = direction;
 		this.length = length;
 	}
 	spin() {
@@ -350,11 +375,14 @@ class Fan {
 		}
 	}
 	update() {
-		this.on = this.button.pressed;
-		if (this.on) {
+		if (this.button.pressed) {
+			this.power = 'on'; 
 			this.spin();
+		} else {
+			this.power = 'off'; 
 		}
-	}
+
+	}	
 }
 
 let addFan = (x, y, length, button) => {
@@ -367,7 +395,8 @@ let addFan = (x, y, length, button) => {
 let drawFan = (fan) => {
 	let {x, y} = fan.pos;
 	let {rotation} = fan;
-	let name = 'fan_' + rotation;
+	let {power} = fan;
+	let name = 'fan_' + power + '_' + rotation;
 	System.drawSprite(name, (x - 1) * 16, (y - 1) * 16);
 }
 
