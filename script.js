@@ -351,21 +351,20 @@ class Information {
 
 //fans
 
-System.loadSprite('fan_down_on_0', 'fan_on_0.png');
-System.loadSprite('fan_down_on_1', 'fan_on_1.png');
-System.loadSprite('fan_down_off_0', 'fan_ff_0.png');
-System.loadSprite('fan_down_off_1', 'fan_ff_1.png');
+System.loadSprite('fan_on_0', 'fan_on_0.png');
+System.loadSprite('fan_on_1', 'fan_on_1.png');
+System.loadSprite('fan_off_0', 'fan_off_0.png');
+System.loadSprite('fan_off_1', 'fan_off_1.png');
 
 let fans = []
 
 class Fan {
-	constructor(x, y, direction, length, button){
+	constructor(x, y, length, button){
 		this.known = true;
 		this.power = 'off';
 		this.pos = System.vec2(x, y);
 		this.button = button;
 		this.rotation = 0;
-		this.direction = direction;
 		this.length = length;
 	}
 	spin() {
