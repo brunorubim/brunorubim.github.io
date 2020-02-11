@@ -1,49 +1,68 @@
 import * as System from '/br-engine/br-engine.js';
 System.set({
 	screenWidth: 192,
-	screenHeight: 192,
+	screenHeight: 196,
 	ticsPerSec: 24,
 });
 
-System.loadSprite('background_test', 'background_test.png');
-System.loadSprite('background_black', 'background_black.png');
-System.loadSprite('0', '0.png');
-System.loadSprite('1', '1.png');
+//game
+
+let game = {
+	paused: false,
+}
 
 //josh
 
-let josh = {
-	pos: System.vec2((6 - 1) * 16, (7 - 1) * 16),
-	speed: System.vec2(0, 0),
-	state: 'down',
-	deltaY: 4,
+class Josh {
+	
 }
 
-System.loadSprite('josh_up', 'josh_up.png');
-System.loadSprite('josh_down', 'josh_down.png');
-System.loadSprite('josh_right', 'josh_right.png');
-System.loadSprite('josh_left', 'josh_left.png');
+let josh = {
+	pos: System.vec2((3 - 1) * 16, (3 - 1) * 16),
+	speed: System.vec2(0, 0),
+	state: 'down',
+	deltaY: 6,
+}
+
+let esc = 'no';
+let pause = 'unpaused';
 
 let readKeys = (n) => {
-	if (josh.pos.x % 16 === 0 && josh.pos.y % 16 === 0) {
-		josh.speed.x = 0;
-		josh.speed.y = 0;
-		if (System.key('w')||System.key('up')) {
-			josh.speed.y = n;
-			josh.state = 'up'
+	if (!game.paused){
+		if (josh.pos.x % 16 === 0 && josh.pos.y % 16 === 0) {
+			josh.speed.x = 0;
+			josh.speed.y = 0;
+			if (System.key('a')||System.key('left')) {
+				josh.speed.x = -n;
+				josh.state = 'left'
+			}
+			if (System.key('d')||System.key('right')) {
+				josh.speed.x = n;
+				josh.state = 'right'
+			}
+			if (System.key('w')||System.key('up')) {
+				josh.speed.y = n;
+				josh.state = 'up'
+			}
+			if (System.key('s')||System.key('down')) {
+				josh.speed.y = -n;
+				josh.state = 'down'
+			}
 		}
-		if (System.key('a')||System.key('left')) {
-			josh.speed.x = -n;
-			josh.state = 'left'
+	}
+	if (System.key('escape')) {
+		if (esc === 'no') {
+			esc ='yes';
+			if (game.paused) {
+				game.paused = false;
+				pause = 'unpaused'
+			} else {
+				game.paused = true;
+				pause = 'paused'
+			}
 		}
-		if (System.key('s')||System.key('down')) {
-			josh.speed.y = -n;
-			josh.state = 'down'
-		}
-		if (System.key('d')||System.key('right')) {
-			josh.speed.x = n;
-			josh.state = 'right'
-		}
+	} else {
+		esc = 'no';
 	}
 }
 
@@ -51,133 +70,195 @@ let drawJosh = () => {
 	System.drawSprite('josh_' + josh.state, josh.pos.x, josh.pos.y + josh.deltaY);
 }
 let updatePos = () => {
-
-	// x+ y+
-	if (josh.speed.x > 0 && josh.speed.y > 0 && checkColision(josh.pos.x + 16, josh.pos.y + 16) && checkColision(josh.pos.x + 16, josh.pos.y)) {
-		josh.speed.x = 0;
-	}
-	if (josh.speed.x > 0 && josh.speed.y > 0 && checkColision(josh.pos.x + 16, josh.pos.y + 16) && checkColision(josh.pos.x, josh.pos.y + 16)) {
-		josh.speed.y = 0;
-	}
-	if (josh.speed.x > 0 && josh.speed.y > 0 && checkColision(josh.pos.x + 16, josh.pos.y + 16)) {
-		josh.speed.x = 0;
-		josh.speed.y = 0;
-	}
-	// x- y+
-	if (josh.speed.x < 0 && josh.speed.y > 0 && checkColision(josh.pos.x - 16, josh.pos.y + 16) && checkColision(josh.pos.x - 16, josh.pos.y)) {
-		josh.speed.x = 0;
-	}
-	if (josh.speed.x < 0 && josh.speed.y > 0 && checkColision(josh.pos.x - 16, josh.pos.y + 16) && checkColision(josh.pos.x, josh.pos.y + 16)) {
-		josh.speed.y = 0;
-	}
-	if (josh.speed.x < 0 && josh.speed.y > 0 && checkColision(josh.pos.x - 16, josh.pos.y + 16)) {
-		josh.speed.x = 0;
-		josh.speed.y = 0;
-	}
-	// x- y-
-	if (josh.speed.x < 0 && josh.speed.y < 0 && checkColision(josh.pos.x - 16, josh.pos.y - 16) && checkColision(josh.pos.x - 16, josh.pos.y)) {
-		josh.speed.x = 0;
-	}
-	if (josh.speed.x < 0 && josh.speed.y < 0 && checkColision(josh.pos.x - 16, josh.pos.y - 16) && checkColision(josh.pos.x, josh.pos.y - 16)) {
-		josh.speed.y = 0;
-	}
-	if (josh.speed.x < 0 && josh.speed.y < 0 && checkColision(josh.pos.x - 16, josh.pos.y - 16)) {
-		josh.speed.x = 0;
-		josh.speed.y = 0;
-	}
-	// x+ y-
-	if (josh.speed.x > 0 && josh.speed.y < 0 && checkColision(josh.pos.x + 16, josh.pos.y - 16) && checkColision(josh.pos.x + 16, josh.pos.y)) {
-		josh.speed.x = 0;
-	}
-	if (josh.speed.x > 0 && josh.speed.y < 0 && checkColision(josh.pos.x + 16, josh.pos.y - 16) && checkColision(josh.pos.x, josh.pos.y - 16)) {
-		josh.speed.y = 0;
-	}
-	if (josh.speed.x > 0 && josh.speed.y < 0 && checkColision(josh.pos.x + 16, josh.pos.y - 16)) {
-		josh.speed.x = 0;
-		josh.speed.y = 0;
-	}
-	if (josh.speed.x > 0) {
-		if (checkColision(josh.pos.x + 16, josh.pos.y)) {
+	if (!game.paused) {
+		// x+ y+
+		if (josh.speed.x > 0 && josh.speed.y > 0 && checkColision(josh.pos.x + 16, josh.pos.y + 16) && checkColision(josh.pos.x + 16, josh.pos.y)) {
 			josh.speed.x = 0;
 		}
-	}
-	if (josh.speed.y > 0) {
-		if (checkColision(josh.pos.x, josh.pos.y + 16)) {
+		if (josh.speed.x > 0 && josh.speed.y > 0 && checkColision(josh.pos.x + 16, josh.pos.y + 16) && checkColision(josh.pos.x, josh.pos.y + 16)) {
 			josh.speed.y = 0;
 		}
-	}
-	if (josh.speed.x < 0) {
-		if (checkColision(josh.pos.x - 16, josh.pos.y)) {
+		if (josh.speed.x > 0 && josh.speed.y > 0 && checkColision(josh.pos.x + 16, josh.pos.y + 16)) {
+			josh.speed.x = 0;
+			josh.speed.y = 0;
+		}
+		// x- y+
+		if (josh.speed.x < 0 && josh.speed.y > 0 && checkColision(josh.pos.x - 16, josh.pos.y + 16) && checkColision(josh.pos.x - 16, josh.pos.y)) {
 			josh.speed.x = 0;
 		}
-	}
-	if (josh.speed.y < 0) {
-		if (checkColision(josh.pos.x, josh.pos.y - 16)) {
+		if (josh.speed.x < 0 && josh.speed.y > 0 && checkColision(josh.pos.x - 16, josh.pos.y + 16) && checkColision(josh.pos.x, josh.pos.y + 16)) {
 			josh.speed.y = 0;
 		}
+		if (josh.speed.x < 0 && josh.speed.y > 0 && checkColision(josh.pos.x - 16, josh.pos.y + 16)) {
+			josh.speed.x = 0;
+			josh.speed.y = 0;
+		}
+		// x- y-
+		if (josh.speed.x < 0 && josh.speed.y < 0 && checkColision(josh.pos.x - 16, josh.pos.y - 16) && checkColision(josh.pos.x - 16, josh.pos.y)) {
+			josh.speed.x = 0;
+		}
+		if (josh.speed.x < 0 && josh.speed.y < 0 && checkColision(josh.pos.x - 16, josh.pos.y - 16) && checkColision(josh.pos.x, josh.pos.y - 16)) {
+			josh.speed.y = 0;
+		}
+		if (josh.speed.x < 0 && josh.speed.y < 0 && checkColision(josh.pos.x - 16, josh.pos.y - 16)) {
+			josh.speed.x = 0;
+			josh.speed.y = 0;
+		}
+		// x+ y-
+		if (josh.speed.x > 0 && josh.speed.y < 0 && checkColision(josh.pos.x + 16, josh.pos.y - 16) && checkColision(josh.pos.x + 16, josh.pos.y)) {
+			josh.speed.x = 0;
+		}
+		if (josh.speed.x > 0 && josh.speed.y < 0 && checkColision(josh.pos.x + 16, josh.pos.y - 16) && checkColision(josh.pos.x, josh.pos.y - 16)) {
+			josh.speed.y = 0;
+		}
+		if (josh.speed.x > 0 && josh.speed.y < 0 && checkColision(josh.pos.x + 16, josh.pos.y - 16)) {
+			josh.speed.x = 0;
+			josh.speed.y = 0;
+		}
+		if (josh.speed.x > 0) {
+			if (checkColision(josh.pos.x + 16, josh.pos.y)) {
+				josh.speed.x = 0;
+			}
+		}
+		if (josh.speed.y > 0) {
+			if (checkColision(josh.pos.x, josh.pos.y + 16)) {
+				josh.speed.y = 0;
+			}
+		}
+		if (josh.speed.x < 0) {
+			if (checkColision(josh.pos.x - 16, josh.pos.y)) {
+				josh.speed.x = 0;
+			}
+		}
+		if (josh.speed.y < 0) {
+			if (checkColision(josh.pos.x, josh.pos.y - 16)) {
+				josh.speed.y = 0;
+			}
+		}
+		josh.pos.add(josh.speed);
 	}
-	josh.pos.add(josh.speed);
 }
 
 //room
 
+
 let clearRoom = () => {
-	colisionMap.length = 0;
+	colisionMap = {};
 }
 
-let roomName = 'test';
-let roomNumber = 0;
-let room = '' + roomName + '_' + roomNumber;
+let roomName = 'black';
+let roomX = 0;
+let roomY = 0;
+let room = '' + roomName + '_' + roomX + '_' + roomY;
 
 let drawRoom = () => {
-	if (room === 'black_0') {
-		drawAllBlocks();
+	room = '' + roomName + '_' + roomX + '_' + roomY;
+	drawAllSensors();
+	drawAllBoxes();
+	drawAllBlocks();
+	drawAllDoors();
+	if (room === 'black_0_0') {
 	}
-	if (room === 'test_0') {
-		drawAllBlocks();
-		drawAllButtons();
-		drawAllFans();
-		drawWire(6, 4, 'l', 0);
-		drawWire(7, 4, 'hor', 0);
-		drawWire(8, 4, 'end', 2);
-		drawWire(6, 5, 'ver', 0);
-		drawWire(4, 6, 'end', 0);
-		drawWire(5, 6, 'hor', 0);
-		drawWire(7, 6, 'hor', 0);
-		drawWire(6, 6, 't', 0);
-		drawWire(8, 6, 'end', 2);
+	if (room === 'test_0_0') {
+	}
+}
+
+let updateRoom = () => {
+	if (josh.pos.x > 191) {
+		josh.pos.x = 1
+		roomX ++;
+		clearRoom();
 	}
 }
 
 let loadRoom = () => {
 	clearRoom();
-	if (room === 'black_0') {
-		addBlock(6, 5, 's');
-		addBlock(4, 7, 'a');
-		addBlock(8, 7, 'd');
-		addBlock(6, 9, 'w');
-		addBlock(1, 1, 'wall_3');
+	if (room === 'black_0_0') {
+		addBlock(1, 1, 'wall_l_0');
+		addBlock(2, 1, 'wall_hor');
+		addBlock(3, 1, 'wall_hor');
+		addBlock(4, 1, 'wall_hor');
+		addBlock(5, 1, 'wall_l_3');
+		addBlock(10, 1, 'wall_l_0');
+		addBlock(11, 1, 'wall_hor');
+		addBlock(12, 1, 'wall_l_3');
+		addBlock(1, 2, 'wall_c_2');
+		addBlock(5, 2, 'wall_l_1');
+		addBlock(6, 2, 'w');
+		addBlock(7, 2, 'wall_l_3');
+		addBlock(10, 2, 'wall_ver');
+		addSensor(11, 2);
+		addBlock(12, 2, 'wall_ver');
+		addDoor(1, 3, sensors[0]);
+		addBlock(7, 3, 'wall_ver');
+		addBlock(8, 3, 'wall_l_0');
+		addBlock(9, 3, 'wall_hor');
+		addBlock(10, 3, 'wall_l_2');
+		addBlock(12, 3, 'wall_ver');
+		addBlock(1, 4, 'wall_c_0');
+		addBlock(5, 4, 'wall_c_0');
+		addBlock(7, 4, 'wall_ver');
+		addBlock(8, 4, 'wall_ver');
+		addBox(10, 4);
+		addBlock(12, 4, 'wall_ver');
+		addBlock(1, 5, 'wall_l_1');
+		addBlock(2, 5, 'wall_hor');
+		addBlock(3, 5, 'd');
+		addBlock(4, 5, 'wall_hor');
+		addBlock(5, 5, 'wall_l_2');
+		addBlock(7, 5, 'wall_ver');
+		addBlock(8, 5, 'wall_ver');
+		addBlock(10, 5, 'wall_c_0');
+		addBlock(12, 5, 'wall_ver');
+		addBlock(2, 6, 'wall_ver');
+		addBlock(7, 6, 'wall_l_1');
+		addBlock(8, 6, 'wall_ver');
+		addBlock(2, 7, 'wall_ver');
+		addBlock(4, 7, 'wall_l_0');
+		addBlock(5, 7, 'wall_hor');
+		addBlock(6, 7, 'a');
+		addBlock(7, 7, 'wall_l_2');
+		addBlock(8, 7, 'wall_ver');
+		addBlock(10, 7, 'wall_l_0');
+		addBlock(11, 7, 'wall_hor');
+		addBlock(12, 7, 'wall_hor');
+		addBlock(2, 8, 'wall_ver');
+		addBlock(4, 8, 'wall_ver');
+		addBlock(8, 8, 'wall_ver');
+		addBlock(10, 8, 'wall_ver');
+		addBlock(2, 9, 'wall_ver');
+		addBlock(4, 9, 'wall_ver');
+		addBlock(8, 9, 'wall_ver');
+		addBlock(10, 9, 'wall_ver');
+		addBlock(2, 10, 'wall_ver');
+		addBlock(4, 10, 'wall_l_1');
+		addBlock(5, 10, 'wall_hor');
+		addBlock(6, 10, 'wall_hor');
+		addBlock(7, 10, 'wall_hor');
+		addBlock(8, 10, 'wall_l_2');
+		addBlock(10, 10, 'wall_ver');
+		addBlock(2, 11, 'wall_ver');
+		addBlock(10, 11, 'wall_ver');
+		addBlock(10, 12, 'wall_l_2');
+		addBlock(2, 12, 'wall_l_1');
+		addBlock(3, 12, 'wall_hor');
+		addBlock(4, 12, 'wall_hor');
+		addBlock(5, 12, 'wall_hor');
+		addBlock(6, 12, 'wall_hor');
+		addBlock(7, 12, 'wall_hor');
+		addBlock(8, 12, 'wall_hor');
+		addBlock(9, 12, 's');
 	}
 	if (room === 'test_0') {
-		addButton(3, 6);
-		addButton(4, 8);
-		addFan(9, 4, 3, buttons[0]);
-		addFan(9, 6, 3, buttons[0]);
+		addSensor(3, 6);
+		addSensor(4, 8);
+		// addFan(9, 4, 'left', 3, sensors[0]);
+		// addFan(9, 6, 'down', 3, sensors[0]);
 	}
 }
 
 //block
 
-System.loadSprite('w', 'w.png');
-System.loadSprite('a', 'a.png');
-System.loadSprite('s', 's.png');
-System.loadSprite('d', 'd.png');
-System.loadSprite('wall_1', 'wall_1.png');
-System.loadSprite('wall_2', 'wall_2.png');
-System.loadSprite('wall_3', 'wall_3.png');
-System.loadSprite('wall_4', 'wall_4.png');
-System.loadSprite('wall_5', 'wall_5.png');
-System.loadSprite('wall_6', 'wall_6.png');
 
 let blocks = [];
 
@@ -209,7 +290,7 @@ let drawAllBlocks = () => {
 
 let drawBackground = () => {
 	System.drawSprite('background_' + roomName, 0, 0);
-	// System.drawSprite('' + roomNumber, 0, 208);
+	// System.drawSprite('' + roomX, 0, 208);
 }
 
 //colision
@@ -228,118 +309,141 @@ let addColision = (x, y) => {
 	colisionMap[pos] = true;
 }
 
+let removeColision = (x, y) => {
+	let pos = (x - 1) * 16 + ',' + (y - 1) * 16;
+	colisionMap[pos] = false;
+}
 
 let checkColision = (x, y) => {
 	let pos = x + ',' + y;
 	return colisionMap[pos] === true;
 };
 
-//goal
+//door
 
-System.loadSprite('goal', 'goal.png');
+let doors = [];
 
-let addGoal = (x, y) => {
-	let win = false;	
-	if (josh.pos.x === (x - 1) * 16 && josh.pos.y === (y - 1) * 16){
-		win = true;
-		roomNumber ++;
-	}
-}
-
-//boxes
-
-let addBox = (x, y) => {
-}
-
-//wires
-
-System.loadSprite('wire_ver_0', 'wire_ver.png');
-System.loadSprite('wire_hor_0', 'wire_hor.png');
-System.loadSprite('wire_end_0', 'wire_end_0.png');
-System.loadSprite('wire_end_1', 'wire_end_1.png');
-System.loadSprite('wire_end_2', 'wire_end_2.png');
-System.loadSprite('wire_end_3', 'wire_end_3.png');
-System.loadSprite('wire_t_0', 'wire_t_0.png');
-System.loadSprite('wire_t_1', 'wire_t_1.png');
-System.loadSprite('wire_t_2', 'wire_t_2.png');
-System.loadSprite('wire_t_3', 'wire_t_3.png');
-System.loadSprite('wire_l_0', 'wire_l_0.png');
-System.loadSprite('wire_l_1', 'wire_l_1.png');
-System.loadSprite('wire_l_2', 'wire_l_2.png');
-System.loadSprite('wire_l_3', 'wire_l_3.png');
-
-let wires = [];
-
-class Wire {
-	constructor(x, y, type, rptation) {
-		this.known = true;
-		this.type = type;
-		this.rotation = rotation;
+class Door {
+	constructor(x, y, sensor) {
 		this.pos = System.vec2(x, y);
+		this.sensor = sensor;
+		this.state = 'closed';
 	}
-}
-
-let drawWire = (x, y, type, rotation) => {
-	x = (x - 1) * 16;
-	y = (y - 1) * 16;
-	System.drawSprite('wire_' + type + '_' + rotation, x, y)
-}
-
-//button
-
-let buttons = [];
-
-System.loadSprite('button_off', 'button_off.png');
-System.loadSprite('button_on', 'button_on.png');
-
-class Button {
-	constructor(x, y) {
-		this.known = true;
-		this.pressed = false;
-		this.pos = System.vec2(x, y);
-	}
-}
-
-let addButton = (x, y) => {
-	let button = new Button(x, y);
-	buttons.push(button);
-}
-
-let drawButton = (button) => {
-	let {x, y} = button.pos;
-	System.drawSprite('button_' + (button.pressed? 'on': 'off'), (x - 1) * 16, (y - 1) * 16);
-}
-
-let drawAllButtons = () => {
-	for (let i = 0; i < buttons.length; i++) {
-		let button = buttons[i];
-		drawButton(button);
-	}
-}
-
-let checkButtons = () => {
-	josh.deltaY = 4;
-	for (let i = 0; i < buttons.length; i++) {
-		let button = buttons[i];
-		let x2 = (button.pos.x - 1) * 16;
-		let y2 = (button.pos.y - 1) * 16;
-		if (josh.pos.x <= x2 + 7 && josh.pos.x >= x2 - 7 && josh.pos.y <= y2 + 7 && josh.pos.y >= y2 - 7) {
-			button.pressed = true;
-			josh.deltaY = 5;
+	update() {
+		if (this.sensor.activated) {
+			this.state = 'open';
+			removeColision(this.pos.x, this.pos.y);
 		} else {
-			button.pressed = false;
+			this.state = 'closed'; 
+			addColision(this.pos.x, this.pos.y);
 		}
 	}
 }
 
-//information
+let addDoor = (x, y, sensor) => {
+	let door = new Door(x, y, sensor);
+	doors.push(door);
+	return door;
+}
 
-System.loadSprite('information_1', 'information_1.png');
-System.loadSprite('information_0', 'information_0.png');
+let drawDoor = (door) => {
+	let {x, y} = door.pos;
+	let {state} = door;
+	let name = 'door_' + state;
+	System.drawSprite(name, (x - 1) * 16, (y - 1) * 16);
+}
 
-let informations = []
+let drawAllDoors = () => {
+	for (let i = 0; i < doors.length; i++) {
+		let door = doors[i];
+		drawDoor(door);
+	}
+}
 
-class Information {
+let updateDoors = () => {
+	for (let i=0; i<doors.length; i++) {
+		doors[i].update();
+	}
+}
+
+//box
+
+
+let boxes = []
+
+class Box {
+	constructor (x, y) {
+	this.pos = System.vec2(x, y)	
+	}
+}
+
+let addBox = (x, y) => {
+	let box = new Box (x, y);
+	addColision(x, y);
+	boxes.push(box);
+}
+
+let drawBox = (box) => {
+	let {x, y} = box.pos;
+	System.drawSprite('box', (x - 1) * 16, (y - 1) * 16);	
+}
+
+let drawAllBoxes = () => {
+	for (let i = 0; i < boxes.length; i++) {
+		let box = boxes[i];
+		drawBox(box);
+	}	
+}
+
+//sensor
+
+let sensors = [];
+
+class Sensor {
+	constructor(x, y) {
+		this.known = true;
+		this.activated = false;
+		this.pos = System.vec2(x, y);
+	}
+}
+
+let addSensor = (x, y) => {
+	let sensor = new Sensor(x, y);
+	sensors.push(sensor);
+}
+
+let drawSensor = (sensor) => {
+	let {x, y} = sensor.pos;
+	System.drawSprite('sensor_' + (sensor.activated? 'on': 'off'), (x - 1) * 16, (y - 1) * 16);
+}
+
+let drawAllSensors = () => {
+	for (let i = 0; i < sensors.length; i++) {
+		let sensor = sensors[i];
+		drawSensor(sensor);
+	}	
+}
+
+let checkSensors = () => {
+	for (let i = 0; i < sensors.length; i++) {
+		let sensor = sensors[i];
+		let x2 = (sensor.pos.x - 1) * 16;
+		let y2 = (sensor.pos.y - 1) * 16;
+		if (josh.pos.x <= x2 + 7 && josh.pos.x >= x2 - 7 && josh.pos.y <= y2 + 7 && josh.pos.y >= y2 - 7) {
+			sensor.activated = true;
+			// josh.deltaY = 5;
+		} else {
+			sensor.activated = false;
+		}
+	}
+}
+
+//scroll
+
+
+let scrolls = []
+
+class Scroll {
 	constructor(x, y, subject) {
 		this.pos = System.vec2(x, y);
 		this.subject = subject
@@ -349,32 +453,30 @@ class Information {
 	}
 }
 
-//fans
-
-System.loadSprite('fan_on_0', 'fan_on_0.png');
-System.loadSprite('fan_on_1', 'fan_on_1.png');
-System.loadSprite('fan_off_0', 'fan_off_0.png');
-System.loadSprite('fan_off_1', 'fan_off_1.png');
+// fans
 
 let fans = []
 
 class Fan {
-	constructor(x, y, length, button){
+	constructor(x, y, direction, length, sensor){
 		this.known = true;
 		this.power = 'off';
 		this.pos = System.vec2(x, y);
-		this.button = button;
+		this.sensor = sensor;
 		this.rotation = 0;
+		this.direction = direction;
 		this.length = length;
 	}
 	spin() {
-		this.rotation ++;
-		if (this.rotation > 1) {
-			this.rotation = 0;
+		if (this.direction === 'down'){
+			this.rotation ++;
+			if (this.rotation > 1) {
+				this.rotation = 0;
+			}
 		}
 	}
 	update() {
-		if (this.button.pressed) {
+		if (this.sensor.activated) {
 			this.power = 'on'; 
 			this.spin();
 		} else {
@@ -384,8 +486,8 @@ class Fan {
 	}	
 }
 
-let addFan = (x, y, length, button) => {
-	let fan = new Fan(x, y, length, button);
+let addFan = (x, y, direction, length, sensor) => {
+	let fan = new Fan(x, y, direction, length, sensor);
 	fans.push(fan);
 	addColision(x, y);
 	return fan;
@@ -395,7 +497,8 @@ let drawFan = (fan) => {
 	let {x, y} = fan.pos;
 	let {rotation} = fan;
 	let {power} = fan;
-	let name = 'fan_' + power + '_' + rotation;
+	let {direction} = fan;
+	let name = 'fan_' + direction + '_' + power + '_' + rotation;
 	System.drawSprite(name, (x - 1) * 16, (y - 1) * 16);
 }
 
@@ -411,6 +514,41 @@ let drawAllFans = () => {
 	}
 }
 
+//render
+
+let render = []
+
+System.loadSprite('a', 'a.png');
+System.loadSprite('background_black', 'background_black.png');
+System.loadSprite('box', 'box.png');
+System.loadSprite('d', 'd.png');
+System.loadSprite('door_closed', 'door_closed.png');
+System.loadSprite('door_open', 'door_open.png');
+System.loadSprite('josh_down', 'josh_down.png');
+System.loadSprite('josh_left', 'josh_left.png');
+System.loadSprite('josh_right', 'josh_right.png');
+System.loadSprite('josh_up', 'josh_up.png');
+System.loadSprite('paused', 'paused.png');
+System.loadSprite('s', 's.png');
+System.loadSprite('scroll', 'scroll.png');
+System.loadSprite('sensor_off', 'sensor_off.png');
+System.loadSprite('sensor_on', 'sensor_on.png');
+System.loadSprite('w', 'w.png');
+System.loadSprite('wall_ver', 'wall_ver.png');
+System.loadSprite('wall_hor', 'wall_hor.png');
+System.loadSprite('wall_t_0', 'wall_t_0.png');
+System.loadSprite('wall_t_1', 'wall_t_1.png');
+System.loadSprite('wall_t_2', 'wall_t_2.png');
+System.loadSprite('wall_t_3', 'wall_t_3.png');
+System.loadSprite('wall_l_0', 'wall_l_0.png');
+System.loadSprite('wall_l_1', 'wall_l_1.png');
+System.loadSprite('wall_l_2', 'wall_l_2.png');
+System.loadSprite('wall_l_3', 'wall_l_3.png');
+System.loadSprite('wall_c_0', 'wall_c_0.png');
+System.loadSprite('wall_c_1', 'wall_c_1.png');
+System.loadSprite('wall_c_2', 'wall_c_2.png');
+System.loadSprite('wall_c_3', 'wall_c_3.png');
+
 //end
 
 // Defines how the game is rendered
@@ -420,6 +558,9 @@ System.setRender(() => {
 	// colisionOutline();
 	drawRoom();
 	drawJosh();
+	if (pause === 'paused') {
+		System.drawSprite('paused', 0, 0);
+	}
 });
 
 // Defines what happens every tic
@@ -429,8 +570,9 @@ System.setTic(() => {
 	checkColision();
 	readKeys(1);
 	updatePos();
-	checkButtons();
-	updateFans();
+	checkSensors();
+	updateDoors();
+	updateRoom();
 	System.render();
 });
 
