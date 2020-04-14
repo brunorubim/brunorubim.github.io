@@ -43,6 +43,7 @@ let createPlayer = () => {
 		speed: System.vec2(),
 		fakeSpeed: System.vec2(),
 		state: 'idle',
+		newState: 'idle',
 		dir: 'right',
 		atTheGround: true,
 		// rising: true,
@@ -77,7 +78,6 @@ let playerAnimation = () => {
 		player.tic = 0;
 	}
 	player.tic ++;
-	console.log(player.state, player.dir);
 };
 
 // Draws the player sprite
@@ -95,19 +95,25 @@ let readKeys = () => {
 	}
 	if (System.key('a')||System.key('left')) {
 		player.speed.x --;
-		player.state = 'walking';
+		player.newState = 'walking';
+		if (player.state !== player.newState){
+			player.tic = 0
+			player.state = 'walking';
+		}
 		player.dir = 'left';
 	} if (System.key('s')||System.key('down')) {
 		player.speed.y --;
 	} if (System.key('d')||System.key('right')) {
 		player.speed.x ++;
-		player.state = 'walking';
+		player.newState = 'walking';
+		if (player.state !== player.newState){
+			player.tic = 0
+			player.state = 'walking';
+		}
 		player.dir = 'right';
 	}
 }
 
-let playerJump = () => {
-}
 
 // Updates the player speed with gravity
 let updateGravity = (gravity) => {
@@ -135,6 +141,34 @@ let wallColision = () => {
 	};
 };
 
+//calculates the distance between the player and the ground
+let distGround = () => {
+	let dist = player.pos.y - 16;
+	if (dist < 0) {
+		player.pos.y = 16;
+		player.speed.y = 0;
+		player.atTheGround = true;
+	}
+}
+
+let distBlock = (x, y, sx, sy) => {
+	let distLeft = player.pos.x + 16 - x;
+	if (distLeft < 0) {
+		player.pos.x = x - 16;
+		player.speed.x = 0;
+	}
+	let distRight = player.pos.x - x + sx;
+	let distBottom = player.pos.y + 16 - y;
+	let distTop = player.pos.y - (y + sy);
+	if (distTop < 0) {
+		player.pos.y = y + sy;
+		player.speed.y = 0;
+		player.atTheGround = true;
+	}
+	console.log('y', y);
+	console.log('player.pos.y', player.pos.y);
+	console.log('distTop', distTop);
+}
 
 // Applys friction ma duuude 
 let applyFriction = (speed, friction) => {
@@ -162,8 +196,7 @@ let updatePhysics = (friction, maxSpeed) => {
 	// };
 	applyFriction(player.speed, friction);
 	updateGravity(1.25);
-	player.pos.x += player.speed.x;
-	player.pos.y += player.speed.y;
+	player.pos.add(player.speed) ;
 };
 
 // Every Player function
@@ -173,6 +206,17 @@ let playerTic = () => {
 }
 
 // } Player
+
+// Colision {
+
+class HitBox {
+	constructor(x, y, sx, sy) {
+		this.pos = System.vec2(x, y);
+		this.dimension = System.vec2(sx, sy);
+	}
+}
+
+// } Colision
 
 // Block {
 
@@ -190,7 +234,7 @@ let addBlock = (x, y) => {
 }
 
 let drawBlock = (x, y) => {
-	System.drawSprite('block', (x - 1) * 16, (y - 1) * 16);
+	System.drawSprite('block', x, y);
 }
 
 let drawAllBlocks = () => {
@@ -205,7 +249,18 @@ let drawAllBlocks = () => {
 // Room {
 
 let loadRoom = () => {
-	addBlock(32, 32);
+	addBlock(0, 0);
+	addBlock(16, 0);
+	addBlock(32, 0);
+	addBlock(48, 0);
+	addBlock(64, 0);
+	addBlock(80, 0);
+	addBlock(96, 0);
+	addBlock(112, 0);
+	addBlock(128, 0);
+	addBlock(144, 0);
+	addBlock(160, 0);
+	addBlock(96, 16);
 }
 
 let drawRoom = () => {
@@ -218,8 +273,8 @@ let drawRoom = () => {
 System.setRender(() => {
 	System.clear();
 	drawRoom();
-	drawPlayer();
 	drawAllBlocks();
+	drawPlayer();
 });
 
 // Defines what happens every tic
@@ -227,8 +282,10 @@ System.setTic(() => {
 	// Runs every tic
 	readKeys();
 	playerTic();
-	wallColision();
+	distBlock(96, 16, 16, 16);
+	distGround();
 	addBlock();
+	loadRoom();
 	System.render();
 });
 
